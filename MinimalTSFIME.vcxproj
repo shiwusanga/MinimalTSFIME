@@ -73,7 +73,7 @@
     </ClCompile>
     <Link>
       <ModuleDefinitionFile>$(ProjectDir)src\MinimalTSFIME.def</ModuleDefinitionFile>
-      <AdditionalDependencies>msctf.lib;ole32.lib;oleaut32.lib;user32.lib;gdi32.lib;advapi32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>ole32.lib;oleaut32.lib;user32.lib;gdi32.lib;advapi32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <ResourceCompile>
       <AdditionalIncludeDirectories>$(ProjectDir)src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>

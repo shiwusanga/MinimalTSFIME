@@ -32,7 +32,6 @@ jobs:
 
       - name: 编译 x64 Release
         id: bx64
-        continue-on-error: true
         shell: pwsh
         run: |
           msbuild MinimalTSFIME.sln /m /nologo /verbosity:minimal /p:Configuration=Release /p:Platform=x64 /p:PlatformToolset=v143 2>&1 | Tee-Object -FilePath build-x64.log
@@ -52,7 +51,6 @@ jobs:
 
       - name: 编译 Win32 Release
         id: bx86
-        continue-on-error: true
         shell: pwsh
         run: |
           msbuild MinimalTSFIME.sln /m /nologo /verbosity:minimal /p:Configuration=Release /p:Platform=x86 /p:PlatformToolset=v143 2>&1 | Tee-Object -FilePath build-x86.log
@@ -79,7 +77,6 @@ jobs:
           if-no-files-found: ignore
 
       - name: 检查产物
-        if: steps.bx64.outcome == 'success' && steps.bx86.outcome == 'success'
         shell: pwsh
         run: |
           if (-not (Test-Path 'x64\Release\MinimalTSFIME.dll'))   { throw 'x64 DLL 未生成' }
@@ -88,7 +85,6 @@ jobs:
             Select-Object FullName, Length
 
       - name: 打成可直接使用的压缩包
-        if: steps.bx64.outcome == 'success' && steps.bx86.outcome == 'success'
         shell: pwsh
         run: |
           New-Item -ItemType Directory -Force -Path 'out\x64\Release','out\Win32\Release' | Out-Null
@@ -98,7 +94,6 @@ jobs:
           Compress-Archive -Path 'out\*' -DestinationPath 'MinimalTSFIME-预编译包.zip' -Force
 
       - name: 上传成品
-        if: steps.bx64.outcome == 'success' && steps.bx86.outcome == 'success'
         uses: actions/upload-artifact@v4
         with:
           name: MinimalTSFIME-预编译包
