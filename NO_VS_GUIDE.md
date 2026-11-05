@@ -15,6 +15,7 @@
    （注意别漏了 `.github` 这个文件夹，workflow 在里面）
 3. 打开仓库的 **Actions** 标签 → 左侧选「编译 TSF 输入法 DLL」→ 点 **Run workflow**
 4. 等 2～5 分钟，刷新页面，点进这次运行，最下面 **Artifacts** 下载 `MinimalTSFIME-预编译包`
+   （也可以直接在仓库根目录的 `dist/` 文件夹里下载，这个不会像 Artifact 那样过期）
 5. 解压到你的 Windows 电脑上，右键 `install.bat` → 以管理员身份运行
 
 它会自动编好 x64 和 Win32 两份 DLL，连同安装/卸载脚本一起打包。你全程不需要装 Visual Studio。
