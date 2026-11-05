@@ -1,0 +1,54 @@
+# 免费云端编译：不需要本地装任何东西
+# windows-2022 镜像自带 Visual Studio 2022 (v143) 和 Windows SDK。
+# 用法：把整个工程（含 .github 文件夹）传到 GitHub 仓库，
+#       Actions 页选中本 workflow → Run workflow → 下载 artifact。
+
+name: 编译 TSF 输入法 DLL
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ main, master ]
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: windows-2022
+    steps:
+      - name: 取代码
+        uses: actions/checkout@v4
+
+      - name: 准备 MSBuild
+        uses: microsoft/setup-msbuild@v2
+
+      - name: 编译 x64 Release
+        run: msbuild MinimalTSFIME.sln /m /nologo /verbosity:minimal /p:Configuration=Release /p:Platform=x64 /p:PlatformToolset=v143
+
+      - name: 编译 Win32 Release
+        run: msbuild MinimalTSFIME.sln /m /nologo /verbosity:minimal /p:Configuration=Release /p:Platform=x86 /p:PlatformToolset=v143
+
+      - name: 检查产物
+        shell: pwsh
+        run: |
+          if (-not (Test-Path 'x64\Release\MinimalTSFIME.dll'))   { throw 'x64 DLL 未生成' }
+          if (-not (Test-Path 'Win32\Release\MinimalTSFIME.dll')) { throw 'Win32 DLL 未生成' }
+          Get-Item 'x64\Release\MinimalTSFIME.dll','Win32\Release\MinimalTSFIME.dll' |
+            Select-Object FullName, Length
+
+      - name: 打成可直接使用的压缩包
+        shell: pwsh
+        run: |
+          New-Item -ItemType Directory -Force -Path 'out\x64\Release','out\Win32\Release' | Out-Null
+          Copy-Item 'x64\Release\MinimalTSFIME.dll'        'out\x64\Release\'
+          Copy-Item 'Win32\Release\MinimalTSFIME.dll'      'out\Win32\Release\'
+          Copy-Item 'install.bat','uninstall.bat','rescue.bat','rescue.ps1','README.md','NO_VS_GUIDE.md' 'out\'
+          Compress-Archive -Path 'out\*' -DestinationPath 'MinimalTSFIME-预编译包.zip' -Force
+
+      - name: 上传成品
+        uses: actions/upload-artifact@v4
+        with:
+          name: MinimalTSFIME-预编译包
+          path: MinimalTSFIME-预编译包.zip
+          if-no-files-found: error
