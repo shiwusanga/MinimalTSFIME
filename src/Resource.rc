@@ -1,0 +1,25 @@
+#include "resource.h"
+IDI_IME ICON "ime.ico"
+
+VS_VERSION_INFO VERSIONINFO
+ FILEVERSION 1,0,0,1
+ PRODUCTVERSION 1,0,0,1
+ FILEFLAGSMASK 0x3fL
+ FILEOS 0x40004L
+ FILETYPE 0x2L
+BEGIN
+    BLOCK "StringFileInfo"
+    BEGIN
+        BLOCK "080404b0"
+        BEGIN
+            VALUE "CompanyName",      "Minimal TSF IME Sample"
+            VALUE "FileDescription",  "Minimal TSF Text Input Processor"
+            VALUE "FileVersion",      "1.0.0.1"
+            VALUE "ProductName",      "Minimal TSF IME"
+        END
+    END
+    BLOCK "VarFileInfo"
+    BEGIN
+        VALUE "Translation", 0x804, 1200
+    END
+END
