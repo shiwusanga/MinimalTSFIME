@@ -160,4 +160,4 @@ Checkpoint-Computer -Description "Before_MinimalTSFIME" -RestorePointType "MODIF
 
 ### 说明
 
-本工程在 Linux 沙盒中生成，无法在这里调用 MSVC 编译验证。接口签名已对照微软官方文档核对；首次编译若报错，多半是 SDK 版本差异导致的个别 GUID/常量名不同，按报错微调即可。建议先原样编译一次跑通注册流程，再动手改功能。
+本工程已在 GitHub Actions（windows-2022 镜像 / VS2022 v143 / Windows 10.0.26100 SDK）上完成 **Release x64 与 Release Win32 双架构编译验证**，产物位于仓库 `dist/MinimalTSFIME-预编译包.zip`，也可在 Actions 的 Artifacts 里下载。建议先原样跑通注册流程，再动手改功能。
