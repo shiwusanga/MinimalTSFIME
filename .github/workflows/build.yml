@@ -9,7 +9,7 @@ on:
     branches: [ main, master ]
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
   build:
@@ -99,3 +99,21 @@ jobs:
           name: MinimalTSFIME-预编译包
           path: MinimalTSFIME-预编译包.zip
           if-no-files-found: error
+
+      # 同时把成品放进仓库，方便在网页上直接下载（artifact 有保存期限）。
+      # 使用 GITHUB_TOKEN 推送不会再次触发本 workflow，不会形成循环。
+      - name: 把成品提交回仓库
+        shell: pwsh
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          New-Item -ItemType Directory -Force -Path dist | Out-Null
+          Copy-Item 'MinimalTSFIME-预编译包.zip' 'dist\MinimalTSFIME-预编译包.zip' -Force
+          git add -f 'dist/MinimalTSFIME-预编译包.zip'
+          git diff --cached --quiet
+          if ($LASTEXITCODE -ne 0) {
+            git commit -m "CI: 预编译 DLL 包 [skip ci]"
+            git push origin HEAD:main
+          } else {
+            Write-Output "内容未变化，跳过提交"
+          }
